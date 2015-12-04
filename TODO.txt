@@ -1,0 +1,8 @@
+# TODO
+
+- Python skeleton
+- choose video processing library
+- extract one still
+- compute average color
+- iterate over video duration
+- export json/csv file
