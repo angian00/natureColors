@@ -1,8 +1,10 @@
 # TODO
 
-- Python skeleton
-- choose video processing library
 - extract one still
-- compute average color
-- iterate over video duration
-- export json/csv file
+
+- get video duration (and metadata?)
+- apply skip intervals
+- clean cmd
+
+- save color data as text file
+- save colorband image
