@@ -1,8 +1,17 @@
-# AG custom files
-videos/
-frames/
+# custom settings
+videos/*
+frames/*
+colors/*
+
+!videos/_placeholder.txt
+!frames/_placeholder.txt
+!colors/_placeholder.txt
+
 venv/
 
+
+
+# vvv GitHub template vvv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
