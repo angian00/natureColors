@@ -17,10 +17,9 @@ Flowchart:
 - install pip and virtualenv
 - setup a Python virtualenv for your project
 - install PIL (Python Image Library) in your virtualenv, excluding the pypi version:
-    pip install --no-index -f http://dist.plone.org/thirdparty/ -U PIL
-
+`pip install --no-index -f http://dist.plone.org/thirdparty/ -U PIL`
 
 - save (or symlink to) your video files in videos/ subdir
-- launch ./process_video.py and follow the instructions
+- launch `./process_video.py` and follow the instructions
 
 
