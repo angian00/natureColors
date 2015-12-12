@@ -29,7 +29,7 @@ colors_dir = 'colors'
 
 cmd_help = 'help'
 cmd_clean = 'clean'
-cmd_scan = 'scan'
+cmd_all = 'all'
 cmd_extract = 'extract'
 cmd_color = 'colors'
 cmd_save_image = 'image'
@@ -53,8 +53,8 @@ def run():
 	elif cmd == cmd_clean:
 		clean()
 	
-	elif cmd == cmd_scan:
-		scan()
+	elif cmd == cmd_all:
+		all()
 	
 	elif cmd == cmd_extract:
 		if len(sys.argv) < 3:
@@ -91,7 +91,7 @@ def help():
 	print '\t' + sys.argv[0] + ' <cmd> [cmd_args]'
 	print 'Available commands: '
 	print '\t' + cmd_help + '\t Produces this help message'
-	print '\t' + cmd_scan + '\t Scan [' + videos_dir + '] dir and process any videos found, as per ' + cmd_extract + ' command'
+	print '\t' + cmd_all + '\t Scan [' + videos_dir + '] dir and process any videos found, as per ' + cmd_extract + ' command'
 	print '\t' + cmd_extract + ' <video_file>\t Extract frames from <video_file>'
 	print '\t' + cmd_color + ' <video_file>\t Compute color from frames extracted from <video_file>'
 	print '\t' + cmd_save_image + ' <video_file>\t Compute color band image for <video_file>'
@@ -100,26 +100,39 @@ def help():
 
 
 def clean():
-	print('TODO: clean')
+	clean_dir(frames_dir)
+	clean_dir(colors_dir)
+	logger.info('Finished cleaning')
+
+def clean_dir(dirname):
+	logger.info('Cleaning dir [{}]', dirname)
+	for f in os.listdir(dirname):
+		full_file_path = join(dirname, f)
+		if isfile(full_file_path) and not full_file_path.endswith('.txt'):
+			logger.debug('Removing file [{}]'.format(full_file_path))
+			os.remove(full_file_path)
+		elif isdir(full_file_path):
+			logger.debug('Removing subdir [{}]'.format(full_file_path))
+			shutils.rmtree(full_file_path)
 
 
-def scan():
+
+def all():
+	clean()
 	logger.info('Scanning video dir [' + videos_dir +']')
 	for f in os.listdir(videos_dir):
 		full_file_path = join(videos_dir, f)
 		if isfile(full_file_path) and not full_file_path.endswith('.txt'):
 			logger.debug('Found file: ' + full_file_path)
 			extract_frames(full_file_path)
+			compute_colors(get_video_name(f))
+			save_color_image(get_video_name(f))
 
 def extract_frames(video_file_path):
-	#video_file_path = 'videos/planet_earth/planet_earth_02.avi'
-
 	video_name = get_video_name(video_file_path)
 	logger.info('Extracting frames from video [' + video_name +']')
 
 	output_file_path = get_frame_file_pattern(video_name, forFFMpeg=True)
-
-	#TODO: get metadata?
 
 	raw_duration = get_video_duration(video_file_path)
 	interval = (raw_duration - start_skip_interval - end_skip_interval) / n_frames
@@ -130,9 +143,10 @@ def extract_frames(video_file_path):
 		logger.debug('Creating dir ' + frame_dir)
 		os.makedirs(frame_dir)
 
-	shell_line = 'ffmpeg -itsoffset -{} -i {} -frames {} -vf fps=1/{} {}'.format(start_skip_interval, video_file_path, n_frames+1, interval, output_file_path)
+	shell_line = 'ffmpeg -itsoffset -{} -i {} -frames {} -vf fps=1/{} {}'.format(start_skip_interval, video_file_path, n_frames, interval, output_file_path)
 	call_with_output(shell_line)
 
+	logger.info('Finished extracting frames from video [' + video_name +']')
 
 
 def compute_colors(video_name):

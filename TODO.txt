@@ -1,10 +1,7 @@
 # TODO
 
-- extract one still
+- test "clean" command
+- download HD versions of all episodes
 
-- get video duration (and metadata?)
-- apply skip intervals
-- clean cmd
-
-- save color data as text file
-- save colorband image
+#FIXME
+- start and end shift
